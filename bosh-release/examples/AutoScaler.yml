@@ -1,0 +1,93 @@
+compilation:
+  network: compilation
+  workers: 2
+director_uuid: 17a45148-1d00-43bc-af28-9882e5a6535a
+jobs:
+- instances: 1
+  name: autoscaler_servicebroker
+  networks:
+  - name: cf-open-autoscaler-network
+    static_ips:
+    - 10.244.4.2
+  persistent_disk: 10240
+  resource_pool: common-resource-pool
+  template: autoscaler_servicebroker
+- instances: 1
+  name: autoscaler_api
+  networks:
+  - name: cf-open-autoscaler-network
+    static_ips:
+    - 10.244.4.3
+  persistent_disk: 10240
+  resource_pool: common-resource-pool
+  template: autoscaler_api
+- instances: 1
+  name: autoscaler_server
+  networks:
+  - name: cf-open-autoscaler-network
+    static_ips:
+    - 10.244.4.4
+  persistent_disk: 10240
+  resource_pool: common-resource-pool
+  template: autoscaler_server
+- instances: 1
+  name: couchdb
+  networks:
+  - name: cf-open-autoscaler-network
+    static_ips:
+    - 10.244.4.5
+  persistent_disk: 10240
+  resource_pool: common-resource-pool
+  template: couchdb
+metadata:
+  director_uuid: 17a45148-1d00-43bc-af28-9882e5a6535a
+  name: cf-open-autoscaler-warden
+  network_name: cf-open-autoscaler-network
+  network_subnet: 10.244.4
+  stemcell_name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+name: cf-open-autoscaler-warden
+networks:
+- name: cf-open-autoscaler-network
+  subnets:
+  - cloud_properties: {}
+    range: 10.244.4.0/24
+    reserved:
+    - 10.244.4.1
+    - 10.244.4.255
+    static:
+    - 10.244.4.2
+    - 10.244.4.3
+    - 10.244.4.4
+    - 10.244.4.5
+    - 10.244.4.6
+    - 10.244.4.7
+    - 10.244.4.8
+    - 10.244.4.9
+    - 10.244.4.10
+  type: manual
+- cloud_properties: {}
+  name: compilation
+  type: dynamic
+properties:
+  autoscaler:
+    network:
+      subnet: 10.244.4
+  env: null
+releases:
+- name: cf-open-autoscaler
+  version: latest
+resource_pools:
+- cloud_properties:
+    name: random
+  name: common-resource-pool
+  network: cf-open-autoscaler-network
+  size: 3
+  stemcell:
+    name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+    version: latest
+update:
+  canaries: 1
+  canary_watch_time: 30000-60000
+  max_in_flight: 3
+  update_watch_time: 30000-60000
+

@@ -1,19 +1,17 @@
 #!/bin/bash
 
 function do_login() {
-    echo "============== Login CF ============================================"
-    cf  login -a $domain -u $username -p $password -o $org -s $space --skip-ssl-validation
-    if [ $? -ne 0 ];then
-        cf create-org $org
-        cf login -a $domain -u $username -p $password -o $org -s $space --skip-ssl-validation
-        cf create-space $space
-        cf login -a $domain -u $username -p $password -o $org -s $space --skip-ssl-validation
-        if [ $? -ne 0 ]; then
-            echo "Fail to login."
-            return 254
-        fi
+
+    currentAPIURL=`cf api | awk '{print $3}' | sed -e 's/https*:\/\///g' `   
+    
+    if [ "$currentAPIURL" != "$apiUrl" ]; then
+            cf login -a $apiUrl --skip-ssl-validation
     fi
-    echo "============== Login CF successfully ============================================"
+
+    cf oauth-token > /dev/null
+    if [ $? -ne 0 ]; then
+        cf login -a $apiUrl --skip-ssl-validation
+    fi
 
 }
 
@@ -62,7 +60,6 @@ function do_pushApp_nostart() {
 }
 
 function setup_TestEnv() {
-    do_login
     do_cleanenv
     do_pushApp_nostart
 }

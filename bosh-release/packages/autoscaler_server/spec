@@ -1,0 +1,9 @@
+---
+name: autoscaler_server
+
+dependencies:
+ - java
+ - tomcat
+
+files:
+ - autoscaler/server.war

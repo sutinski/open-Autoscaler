@@ -9,7 +9,7 @@ function setup_TestConfig() {
     TestAPP_NAME="ScalingTestApp"
 
     Resource_DIR="$basedir/resource"
-    APP_FILE="${Resource_DIR}/app/HelloWorldJavaWeb.war"
+    APP_FILE="${Resource_DIR}/app/nodeApp/"
     DYNAMIC_APP_FILE="${Resource_DIR}/app/nodeApp/"
     Default_Memory="700m"
     logfile=${basedir}/"fat.log"
@@ -62,24 +62,19 @@ function invokeTestWithOutput(){
 
 }
 
-if  [ $# -lt 6 ]
+if  [ $# -lt 2 ]
 then 
-	echo -e  "Usages: launchTest.sh <serviceName> <cf domain> <cf username> <cf password> <org> <space>"
-	echo -e  "e.g. launchTest.sh CF-AutoScaler bosh-lite.com admin admin org space"
+	echo -e  "Usages: launchTest.sh <serviceName> <cf api url>"
+	echo -e  "e.g. launchTest.sh CF-AutoScaler api.bosh-lite.com"
 	exit -1
 fi
 
 ###Start of main
 serviceName=$1
-domain=https://api.$2
-username=$3
-password=$4
-org=$5
-space=$6
+apiUrl=$2
 
 setup_TestConfig
-#do_login
-
+do_login
 echo " >>> The latest test progress are logged in $logfile"
 
 invokeTest "Prepare basic test environment " setup_TestEnv
@@ -92,7 +87,6 @@ invokeTest "Testcase: History API" test_History_API
 
 invokeTestWithOutput "Testcase: Schedule based scaling" doCheckScaleByRecurringSchedule
 invokeTestWithOutput "Testcase: Metric based scaling" doCheckScaleByMetrics
-
 
 cleanup_TestConfig
 

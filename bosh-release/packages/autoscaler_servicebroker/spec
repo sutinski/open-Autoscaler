@@ -1,0 +1,9 @@
+---
+name: autoscaler_servicebroker
+
+dependencies:
+ - java
+ - tomcat
+
+files:
+ - autoscaler/servicebroker.war

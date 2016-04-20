@@ -1,4 +1,4 @@
- #!/bin/bash
+ #!/bin/bash 
 basedir=$(cd "$(dirname "$0")"; pwd)
 source ${basedir}/script/utils.sh
 source ${basedir}/default.properties
@@ -13,10 +13,12 @@ promptHint "Prerequisite software:"
 echo " >>> Maven 3.0 or above"
 echo " >>> cf v6 or above"
 echo " >>> Commond \"curl\" supported in SHELL "
+echo " >>> bosh cli (if $componentName will be deployed with bosh release) "
+echo " >>> spiff (if $componentName will be deployed with bosh release) "
 
 promptHint "Step 1: Configure $componentName"
 source $basedir/script/configProject.sh
-configProject
+configProject 
 
 promptHint "Step 2: Package $componentName"
 source $basedir/script/packageProject.sh

@@ -1,0 +1,5 @@
+check process tomcat
+  with pidfile /var/vcap/sys/run/tomcat/tomcat.pid
+  start program "/var/vcap/jobs/autoscaler_api/bin/tomcat_ctl start"
+  stop program "/var/vcap/jobs/autoscaler_api/bin/tomcat_ctl stop"
+  group vcap

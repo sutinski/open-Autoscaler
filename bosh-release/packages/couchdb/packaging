@@ -1,2 +1,73 @@
 # abort script on any command that exits with a non zero value
 set -e
+set -x 
+
+# Available variables
+# $BOSH_COMPILE_TARGET - where this package & spec'd source files are available
+# $BOSH_INSTALL_TARGET - where you copy/install files to be included in package
+
+# Detect # of CPUs so make jobs can be parallelized
+BOSH_INSTALL_TARGET=/var/vcap/packages/couchdb
+CPUS=$(grep -c ^processor /proc/cpuinfo)
+
+echo "Extract & Install dependencies"
+
+tar xzvf couchdb/python/Python-2.7.6.tgz
+mkdir -p ${BOSH_INSTALL_TARGET}/python
+cd Python-2.7.6
+./configure --prefix=${BOSH_INSTALL_TARGET}/python
+make -j${CPUS}
+make install
+cd -
+
+tar xzfv couchdb/spidermonkey/js185-1.0.0.tar.gz
+mkdir -p ${BOSH_INSTALL_TARGET}/spidermonkey
+cd js-1.8.5/js/src
+export PATH=${BOSH_INSTALL_TARGET}/python/bin:$PATH
+./configure --prefix=${BOSH_INSTALL_TARGET}/spidermonkey
+make -j${CPUS}
+make install
+cd -
+
+tar xzvf couchdb/erlang/otp_src_R16B03-1.tar.gz
+mkdir -p ${BOSH_INSTALL_TARGET}/erlang
+cd otp_src_R16B03-1
+export HOME=/var/vcap
+./configure --prefix=${BOSH_INSTALL_TARGET}/erlang --without-termcap
+make -j${CPUS}
+make install
+cd -
+
+tar xzfv couchdb/icu/icu4c-52_1-src.tgz
+mkdir -p ${BOSH_INSTALL_TARGET}/icu
+cd icu/source
+chmod +x runConfigureICU configure install-sh
+./runConfigureICU Linux --prefix=${BOSH_INSTALL_TARGET}/icu
+make -j${CPUS}
+make install
+cd -
+
+echo "Extract & Install Couchdb"
+
+tar xzvf couchdb/apache-couchdb-1.6.1.tar.gz
+cd apache-couchdb-1.6.1
+export PATH=${BOSH_INSTALL_TARGET}/spidermonkey/bin:$PATH
+export PATH=${BOSH_INSTALL_TARGET}/erlang/bin:$PATH
+export PATH=${BOSH_INSTALL_TARGET}/icu/bin:$PATH
+export JS_CFLAGS="-I${BOSH_INSTALL_TARGET}/spidermonkey/include/js"
+export JS_LIBS="-L${BOSH_INSTALL_TARGET}/spidermonkey/lib -lmozjs185  -ldl  -lm -ldl"
+./configure  --prefix=${BOSH_INSTALL_TARGET} --with-erlang=${BOSH_INSTALL_TARGET}/erlang/lib/erlang/usr/include/
+make -j${CPUS}
+make install
+
+
+
+
+
+
+
+
+
+
+
+

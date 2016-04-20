@@ -1,0 +1,4 @@
+# abort script on any command that exits with a non zero value
+set -e -x
+unzip autoscaler/server.war -d ./server
+cp -r ./server ${BOSH_INSTALL_TARGET}

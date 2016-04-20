@@ -49,6 +49,11 @@ function promptHint () {
 	echo -e ${highlightColor} "\n" $1 ${defaultColor} ":" > /dev/stderr
 }
 
+function promptWarning () {
+	defaultColor="\033[0m"
+	highlightColor="\033[31m"
+	echo -e ${highlightColor} "\n" $1 ${defaultColor} 
+}
 
 function promptInput () {
 	defaultColor="\033[0m"
@@ -60,29 +65,37 @@ function promptInput () {
 	fi
 }
 
-function getDefaultConfig() {
+function getConfigurationEntry() {
 	local key=$1
 	local filename=$2
 	local value;
 	if [ -z $filename ]; then
-		value=`cat ${basedir}/default.properties \
+		value=`cat \
+					$RuntimeProfileDIR/$profile.properties \
 					$AutoScalingServerProfileDIR/$profile.properties \
 					$AutoScalingAPIProfileDIR/$profile.properties \
 					$AutoScalingBrokerProfileDIR/$profile.properties \
-					| grep "$key"  | head -n 1 |  awk -F "$key=" '{print $2}'`
+					${basedir}/default.properties \
+					| grep "$key"  | head -n 1 `
 	else
-		value=`cat $filename | grep "$key"  | head -n 1 | awk -F "$key=" '{print $2}'`
+		value=`cat $filename | grep "$key"  | head -n 1 `
 	fi
 
 	echo $value
 }
 
-
-function showConfigValue() {
-	echo "$1="`getDefaultConfig $1 $2`
+function getConfigurationValue() {
+	echo `getConfigurationEntry $1 $2 | awk -F "$key=" '{print $2}'`
 }
 
-
+function showConfigurationEntry() {
+	entry=`getConfigurationEntry $1 $2`
+	if [ -z "$entry" ]; then
+		promptWarning "$1=<MISSING>"
+	else
+		echo "$entry"
+	fi
+}
 
 function readConfigValue() {
 	local key=$1
@@ -90,7 +103,7 @@ function readConfigValue() {
 	local defaultValue=$3
 	local prompt;
 	if [ -z $defaultValue ]; then
-		defaultValue=`getDefaultConfig $key`
+		defaultValue=`getConfigurationValue $key`
 	fi 
 	prompt=`promptInput "$description" $defaultValue`
 	
@@ -102,26 +115,38 @@ function readConfigValue() {
 
 }
 
-
 function setProperties() {
-	local projectDirName=${basedir}/../$1
+	local propertiesFile=$1
 	local key=$2
 	local value=$3
-	local propertieFile=$projectDirName/profiles/$profile.properties
 
-	#echo " >>> set \"$key=$value\" in $propertieFile" > /dev/stderr
-	if [ -z `cat $propertieFile | grep $key` ]; then
-		echo "$key=$value" >> $propertieFile
+	if [ -z "`cat $propertiesFile | grep $key`" ]; then
+		echo "$key=$value" >> $propertiesFile
 	else
+		#if [ "$SHELL" == "mac" ]; then
+		#	sed -i '' "s/$key=.*/$key=$value/g" $propertiesFile
+		#else
+		#	sed -i "s/$key=.*/$key=$value/g" $propertiesFile
+		#fi
 		if [ "$SHELL" == "mac" ]; then
-			sed -i '' "/$key/d" $propertieFile
-			echo "$key=$value" >> $propertieFile
+			sed -i '' "/$key/d" $propertiesFile
+			echo "$key=$value" >> $propertiesFile
 		else
-			sed -i "/$key/d" $propertieFile
-			echo "$key=$value" >> $propertieFile
+			sed -i "/$key/d" $propertiesFile
+			echo "$key=$value" >> $propertiesFile
 		fi
 	fi 
+
 }
+
+function setProfileProperties() {
+	local propertiesFile=$1/$profile.properties
+	local key=$2
+	local value=$3
+
+	setProperties $propertiesFile  $key $value 
+}
+
 
 function configMavenForEclipse(){
 
@@ -163,6 +188,7 @@ function pushMavenPackageToCF() {
 	local appName=$1
 	local warDirName=${basedir}/../$2/target
 	local warFileName=$2-1.0-SNAPSHOT.war
+	local hostingCustomDomain=$3
 	echo " >>> Push file $warDirName/$warFileName "
 	cf push $appName -p $warDirName/$warFileName -d $hostingCustomDomain
 		

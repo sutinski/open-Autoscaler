@@ -1,0 +1,10 @@
+/.DS_Store
+jobs/**/.DS_Store
+packages/**/.DS_Store
+src/**/.DS_Store
+/.blobs
+/.dev_builds
+/.final_builds
+/blobs
+/dev_releases
+/downloads

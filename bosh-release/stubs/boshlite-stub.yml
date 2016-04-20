@@ -1,0 +1,7 @@
+---
+metadata:
+ name: cf-open-autoscaler-warden
+ director_uuid: 17a45148-1d00-43bc-af28-9882e5a6535a
+ network_name: cf-open-autoscaler-network
+ network_subnet: 10.244.4
+ stemcell_name: bosh-warden-boshlite-ubuntu-trusty-go_agent

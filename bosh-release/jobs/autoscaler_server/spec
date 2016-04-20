@@ -1,0 +1,17 @@
+---
+name: autoscaler_server
+templates:
+  tomcat_ctl: bin/tomcat_ctl
+  server.xml: conf/server.xml
+packages:
+  - pid_utils
+  - java
+  - tomcat
+  - autoscaler_server
+properties:
+  tomcat.http.port:
+    description: the http port for tomocat server
+    default: 80
+  autoscaler.network.subnet:
+    description: the network subnet for deployment
+  

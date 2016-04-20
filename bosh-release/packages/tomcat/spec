@@ -2,5 +2,6 @@
 name: tomcat
 
 dependencies:
-
+  - java
 files:
+  - apache-tomcat/apache-tomcat-8.0.32.tar.gz

@@ -1,0 +1,5 @@
+# abort script on any command that exits with a non zero value
+set -e
+
+unzip autoscaler/servicebroker.war -d ./servicebroker
+cp -r ./servicebroker ${BOSH_INSTALL_TARGET}

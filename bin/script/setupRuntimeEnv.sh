@@ -1,72 +1,76 @@
  #!/bin/bash
 source ${basedir}/script/utils.sh
 
-function loadRuntimeConfig(){
-if [ -z $onCloud ]; then
-	cfUrl=`getDefaultConfig cfUrl ${AutoScalingServerProfileDIR}/$profile.properties`
+function initRuntimeConfiguration(){
+	cfUrl=`getConfigurationValue cfUrl ${AutoScalingServerProfileDIR}/$profile.properties`
 	cfDomain=${cfUrl##"api."}
-	brokerUsername=`getDefaultConfig brokerUsername ${AutoScalingBrokerProfileDIR}/$profile.properties`
-	brokerPassword=`getDefaultConfig brokerPassword ${AutoScalingBrokerProfileDIR}/$profile.properties`
+	brokerUsername=`getConfigurationValue brokerUsername ${AutoScalingBrokerProfileDIR}/$profile.properties`
+	brokerPassword=`getConfigurationValue brokerPassword ${AutoScalingBrokerProfileDIR}/$profile.properties`
 
-	serverURIList=`getDefaultConfig serverURIList ${AutoScalingBrokerProfileDIR}/$profile.properties`
-	apiServerURI=`getDefaultConfig apiServerURI ${AutoScalingBrokerProfileDIR}/$profile.properties`
+	serverURIList=`getConfigurationValue serverURIList ${AutoScalingBrokerProfileDIR}/$profile.properties`
+	apiServerURI=`getConfigurationValue apiServerURI ${AutoScalingBrokerProfileDIR}/$profile.properties`
+	brokerURI=`getConfigurationValue brokerURI ${RuntimeProfileDIR}/$profile.properties`
+
+	deploymode=`getConfigurationValue deploymode ${RuntimeProfileDIR}/$profile.properties`
+
+
 	
-	if [[ $apiServerURI == ${AutoScalingAPIName}.* ]]; then
-		onCloud="y";
-		hostingCustomDomain=${apiServerURI##"`eval echo $AutoScalingAPIName`."};
-		hostingCFDomain=`readConfigValue hostingCFDomain "CF domain to host $componentName applications" $hostingCustomDomain`;
-	else
-		onCloud="n";
-	fi 
-fi
-
 }
 
-function launchRuntime() {
+function deployRuntime() {
 
+    case $deploymode in
+        [cfapp]* )  
+		 	hostingCFDomain=`getConfigurationValue hostingCFDomain ${RuntimeProfileDIR}/$profile.properties`
+			hostingCustomDomain=`getConfigurationValue hostingCustomDomain ${RuntimeProfileDIR}/$profile.properties`
+			org=`getConfigurationValue org ${RuntimeProfileDIR}/$profile.properties`
+			space=`getConfigurationValue space ${RuntimeProfileDIR}/$profile.properties`
+			cfUsername=`getConfigurationValue cfUsername ${RuntimeProfileDIR}/$profile.properties`
+			cfPassword=`getConfigurationValue cfPassword ${RuntimeProfileDIR}/$profile.properties`
 
-if [ $onCloud == "n" ]; then
-	echo " >>> Please setup your runtime environment runtime MANUALLY, and align with previous setting "
-	echo " serverURIList : $serverURIList"
-	echo " apiServerURI : $apiServerURI"
-    read -p "Press Any key to continue when runtime environment is launched ... " input
-   
-else
-	echo " >>> Now, the script will push $componentName to $hostingCFDomain"
-	echo " >>> Please input the access info for api.$hostingCFDomain "
-	cfUsername=`readConfigValue cfUsername "CF Username"`
-	cfPassword=`readConfigValue cfPassword "CF Password"`
-	org=`readConfigValue Org "CF Org to host $componentName"`
-	space=`readConfigValue Space "CF Space to host $componentName"`
-
-	cf login -a https://api.$hostingCFDomain -u $cfUsername -p $cfPassword -o $org -s $space  --skip-ssl-validation
-
-	pushMavenPackageToCF ${AutoScalingServerName} ${AutoScalingServerProjectDirName}
-	pushMavenPackageToCF ${AutoScalingAPIName} ${AutoScalingAPIProjectDirName}
-	pushMavenPackageToCF ${AutoScalingBrokerName} ${AutoScalingBrokerProjectDirName}
-	
-fi
+			cf login -a https://api.$hostingCFDomain -u $cfUsername -p $cfPassword -o $org -s $space  --skip-ssl-validation
+			pushMavenPackageToCF ${AutoScalingServerName} ${AutoScalingServerProjectDirName} ${hostingCustomDomain}
+			pushMavenPackageToCF ${AutoScalingAPIName} ${AutoScalingAPIProjectDirName} ${hostingCustomDomain}
+			pushMavenPackageToCF ${AutoScalingBrokerName} ${AutoScalingBrokerProjectDirName} ${hostingCustomDomain}
+			;;
+        [bosh]* )  
+ 			boshdir="${basedir}/../bosh-release/" ;
+ 			bosh_stub_file=${boshdir}/stubs/boshlite-stub.yml
+ 			deploymentYML=$boshdir/examples/$componentName.yml;
+ 			set -e
+ 			${boshdir}/scripts/generate_blobs.sh
+ 			${boshdir}/scripts/generate_deployment_manifest.sh $bosh_stub_file > $boshdir/examples/$componentName.yml
+ 			cd $boshdir
+ 			bosh create release --force | tee ${basedir}/output.txt
+ 			releasefile=`cat ${basedir}/output.txt | tail -n 1 | awk '{print $3}'`
+			rm ${basedir}/output.txt
+			bosh upload release $releasefile
+			bosh deployment $deploymentYML
+			bosh deploy
+			cd ${basedir}
+			set +e
+ 			;;
+ 		[localenv]* )  
+ 			echo " >>> Please setup your runtime environment MANUALLY to align with previous setting : "
+			echo " serverURIList : $serverURIList"
+			echo " apiServerURI : $apiServerURI"
+			echo " serviceBrokerURI : $brokerURI"
+    		read -p "Press Any key to continue when runtime environment is launched ... " input
+ 			;;		
+        * ) echo "Invalid deployment mode \"$deploymode\"";;
+    esac
 
 }
 
 function registerService(){
 
-if [ $onCloud == "n" ]; then
-	read -p "Please input URL of service broker " brokerURI
+echo " >>> To register service on $cfDomain, please login api.$cfDomain first .."
+
+if  [ "$deploymode" != "cfapp" ] || [ "$cfDomain" != "$hostingCFDomain" ] ; then
+	cf login  -a https://api.$cfDomain --skip-ssl-validation
 else
-	brokerURI="http://"${AutoScalingBrokerName}.$hostingCustomDomain
+	cf login -a https://api.$cfDomain -u $cfUsername -p $cfPassword -o $org -s $space --skip-ssl-validation
 fi
-
-
-if [ "$cfDomain" != "$hostingCFDomain" ] || [ -z "$cfUsername" ] ; then
-	echo " >>> Please input the access info of api.$cfDomain"
-	cfUsername=`readConfigValue cfUsername "CF Username"`
-	cfPassword=`readConfigValue cfPassword "CF Password"`
-	org=`readConfigValue Org "CF Org which is accessible for $cfUsername"`
-	space=`readConfigValue Space "CF Space which is accessible for $cfUsername"`
-fi
-
-cf login -a https://api.$cfDomain -u $cfUsername -p $cfPassword -o $org -s $space --skip-ssl-validation
 
 cf marketplace -s $serviceName
 
@@ -82,8 +86,7 @@ fi
 
 
 function setupRuntimeEnv(){
-	loadRuntimeConfig
-	launchRuntime
+	initRuntimeConfiguration
+	deployRuntime
 	registerService
-
 }

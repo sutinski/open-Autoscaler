@@ -1,0 +1,94 @@
+metadata:
+  <<: (( merge ))
+
+name: (( metadata.name ))
+director_uuid: (( metadata.director_uuid ))
+
+releases:
+- name: cf-open-autoscaler
+  version: latest
+
+compilation:
+  workers: 2
+  network: compilation
+
+update:
+  canaries: 1
+  canary_watch_time: 30000-60000
+  update_watch_time: 30000-60000
+  max_in_flight: 3
+
+resource_pools:
+- name: common-resource-pool
+  network: (( metadata.network_name ))
+  size: 3
+  stemcell:
+    name: (( metadata.stemcell_name ))
+    version: latest
+  cloud_properties:
+    name: random
+
+networks:
+- name: (( metadata.network_name ))
+  type: manual
+  subnets:
+  - range: (( metadata.network_subnet ".0/24" ))
+    reserved:
+    - (( metadata.network_subnet ".1" ))
+    - (( metadata.network_subnet ".255" ))
+    static:
+    - (( metadata.network_subnet ".2" )) 
+    - (( metadata.network_subnet ".3" ))
+    - (( metadata.network_subnet ".4" ))
+    - (( metadata.network_subnet ".5" ))
+    - (( metadata.network_subnet ".6" ))
+    - (( metadata.network_subnet ".7" ))
+    - (( metadata.network_subnet ".8" ))
+    - (( metadata.network_subnet ".9" ))
+    - (( metadata.network_subnet ".10" ))
+    cloud_properties: {}
+- name: compilation
+  type: dynamic
+  cloud_properties: {}
+
+
+jobs:
+- name: autoscaler_servicebroker
+  template: autoscaler_servicebroker
+  instances: 1
+  resource_pool: common-resource-pool
+  persistent_disk: 10240
+  networks:
+    - name: (( metadata.network_name ))
+      static_ips: (( static_ips(0) ))
+- name: autoscaler_api
+  template: autoscaler_api
+  instances: 1
+  resource_pool: common-resource-pool
+  persistent_disk: 10240
+  networks:
+    - name: (( metadata.network_name ))
+      static_ips: (( static_ips(1) ))
+- name: autoscaler_server
+  template: autoscaler_server
+  instances: 1
+  resource_pool: common-resource-pool
+  persistent_disk: 10240
+  networks:
+    - name: (( metadata.network_name ))
+      static_ips: (( static_ips(2) ))     
+- name: couchdb
+  template: couchdb
+  instances: 1
+  resource_pool: common-resource-pool
+  persistent_disk: 10240
+  networks:
+    - name: (( metadata.network_name ))
+      static_ips: (( static_ips(3) ))
+
+properties:
+  env:
+  autoscaler:
+    network:
+      subnet: (( metadata.network_subnet ))
+
