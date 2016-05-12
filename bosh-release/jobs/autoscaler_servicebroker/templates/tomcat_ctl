@@ -20,10 +20,12 @@ case $1 in
     mkdir -p $LOG_DIR
 
     #config autoscaler server
-    network_subnet="<%= p("autoscaler.network.subnet") %>";
-    sed -i "s/couchdbHost=.*/couchdbHost=${network_subnet}.5/g" /var/vcap/packages/${BASE_NAME}/servicebroker/WEB-INF/classes/config.properties
-    sed -i "s/serverURIList=.*/serverURIList=http:\/\/${network_subnet}.4\/server/g" /var/vcap/packages/${BASE_NAME}/servicebroker/WEB-INF/classes/config.properties
-    sed -i "s/apiServerURI=.*/apiServerURI=http:\/\/${network_subnet}.3\/api/g" /var/vcap/packages/${BASE_NAME}/servicebroker/WEB-INF/classes/config.properties
+    couchdb_host = "<%= p("autoscaler.couchdb.host") %>";
+    autoscaler_servicebroker = "<%= p("autoscaler.autoscaler_servicebroker.host") %>";
+    autoscaler_api = "<%= p("autoscaler.autoscaler_api.host") %>";
+    sed -i "s/couchdbHost=.*/couchdbHost=${couchdb_host}/g" /var/vcap/packages/${BASE_NAME}/servicebroker/WEB-INF/classes/config.properties
+    sed -i "s/serverURIList=.*/serverURIList=http:\/\/${autoscaler_servicebroker}\/server/g" /var/vcap/packages/${BASE_NAME}/servicebroker/WEB-INF/classes/config.properties
+    sed -i "s/apiServerURI=.*/apiServerURI=http:\/\/${autoscaler_api}\/api/g" /var/vcap/packages/${BASE_NAME}/servicebroker/WEB-INF/classes/config.properties
     cp -r /var/vcap/packages/${BASE_NAME}/servicebroker /var/vcap/packages/tomcat/webapps
 
     #config server.xml

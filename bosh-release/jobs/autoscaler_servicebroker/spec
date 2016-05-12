@@ -12,5 +12,9 @@ properties:
   tomcat.http.port:
     description: the http port for tomocat server
     default: 80
-  autoscaler.network.subnet:
-    description: the network subnet for deployment
+  autoscaler.autoscaler_servicebroker.host:
+    description: the host for the autoscaler_servicebroker
+  autoscaler.autoscaler_api.host:
+    description: the host for the autoscaler_api
+  autoscaler.couchdb.host:
+    description: the host for the autoscaler's couchdb server
