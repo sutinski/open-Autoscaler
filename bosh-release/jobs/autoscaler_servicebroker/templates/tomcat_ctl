@@ -20,9 +20,9 @@ case $1 in
     mkdir -p $LOG_DIR
 
     #config autoscaler server
-    couchdb_host = "<%= p("autoscaler.couchdb.host") %>";
-    autoscaler_servicebroker = "<%= p("autoscaler.autoscaler_servicebroker.host") %>";
-    autoscaler_api = "<%= p("autoscaler.autoscaler_api.host") %>";
+    couchdb_host="<%= p("autoscaler.couchdb.host") %>";
+    autoscaler_servicebroker="<%= p("autoscaler.autoscaler_servicebroker.host") %>";
+    autoscaler_api="<%= p("autoscaler.autoscaler_api.host") %>";
     sed -i "s/couchdbHost=.*/couchdbHost=${couchdb_host}/g" /var/vcap/packages/${BASE_NAME}/servicebroker/WEB-INF/classes/config.properties
     sed -i "s/serverURIList=.*/serverURIList=http:\/\/${autoscaler_servicebroker}\/server/g" /var/vcap/packages/${BASE_NAME}/servicebroker/WEB-INF/classes/config.properties
     sed -i "s/apiServerURI=.*/apiServerURI=http:\/\/${autoscaler_api}\/api/g" /var/vcap/packages/${BASE_NAME}/servicebroker/WEB-INF/classes/config.properties
