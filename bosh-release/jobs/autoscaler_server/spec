@@ -12,8 +12,6 @@ properties:
   tomcat.http.port:
     description: the http port for tomocat server
     default: 80
-  autoscaler.autoscaler_server.host:
-    description: the network host for the autoscaler_server server
   autoscaler.couchdb.host:
     description: the network host for the couchdb server
   
