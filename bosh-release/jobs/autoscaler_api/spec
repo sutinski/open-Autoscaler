@@ -9,6 +9,6 @@ packages:
   - tomcat
   - autoscaler_api
 properties:
-  tomcat.http.port:
+  tomcat.autoscaler_api.http.port:
     description: the http port for tomocat server
     default: 80
