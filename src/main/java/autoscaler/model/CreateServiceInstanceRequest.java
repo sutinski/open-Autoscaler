@@ -68,18 +68,20 @@ public class CreateServiceInstanceRequest {
 		this.planId = null;
 		this.organizationGuid = null;
 		this.spaceGuid = null;
+		this.serviceInstanceId = null;
 	}
 
 	public CreateServiceInstanceRequest(String serviceDefinitionId, String planId, String organizationGuid, String spaceGuid,
-			Map<String, Object> parameters) {
+			String serviceInstanceId, Map<String, Object> parameters) {
 		this.serviceDefinitionId = serviceDefinitionId;
 		this.planId = planId;
 		this.organizationGuid = organizationGuid;
 		this.spaceGuid = spaceGuid;
+		this.serviceInstanceId = serviceInstanceId;
 	}
 
-	public CreateServiceInstanceRequest(String serviceDefinitionId, String planId, String organizationGuid, String spaceGuid) {
-		this(serviceDefinitionId, planId, organizationGuid, spaceGuid, null);
+	public CreateServiceInstanceRequest(String serviceDefinitionId, String planId, String organizationGuid, String spaceGuid, String serviceInstanceId) {
+		this(serviceDefinitionId, planId, organizationGuid, spaceGuid, serviceInstanceId, null);
 	}
 
 	public CreateServiceInstanceRequest withServiceDefinition(ServiceDefinition serviceDefinition) {
@@ -161,7 +163,7 @@ public class CreateServiceInstanceRequest {
 
 	@Override
 	public String toString() {
-		return "CreateServiceInstanceRequest [serviceDefinitionId=" + serviceDefinitionId + ", planId=" + planId + ", organizationGuid="
+		return "CreateServiceInstanceRequest [serviceDefinitionId=" + this.getServiceDefinitionId() + ", planId=" + planId + ", organizationGuid="
 				+ organizationGuid + ", spaceGuid=" + spaceGuid + "]";
 	}
 }
