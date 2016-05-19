@@ -1,7 +1,7 @@
 package autoscaler.service;
 
-import autoscaler.controller.CreateServiceInstanceResponse;
 import autoscaler.model.CreateServiceInstanceRequest;
+import autoscaler.model.CreateServiceInstanceResponse;
 
 public interface ServiceInstanceService {
 	/**

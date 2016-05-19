@@ -13,7 +13,7 @@ public class ServiceBrokerControllerTest {
 	public void itRetrievesTheCatalog() {
 		Catalog aCatalog = CatalogFixture.getCatalogWithRequires();
 		BeanCatalogService bcs = new BeanCatalogService(aCatalog);
-		ServiceBrokerController sbc = new ServiceBrokerController(bcs, null);
+		ServiceBrokerController sbc = new ServiceBrokerController(bcs, null, null);
 		Catalog catalog = sbc.getCatalog();
 		Assert.assertEquals(aCatalog, catalog);
 	}

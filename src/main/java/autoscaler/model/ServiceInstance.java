@@ -12,11 +12,11 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class ServiceInstance {
 
 	@JsonSerialize
-	@JsonProperty("service_instance_id")
+	@JsonProperty("service_id")
 	private String serviceInstanceId;
 
 	@JsonSerialize
-	@JsonProperty("service_id")
+	@JsonProperty("service_definition_id")
 	private String serviceDefinitionId;
 
 	@JsonSerialize

@@ -1,4 +1,4 @@
-package autoscaler.controller;
+package autoscaler.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;

@@ -16,21 +16,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 import autoscaler.exception.ServiceDefinitionDoesNotExistException;
 import autoscaler.model.Catalog;
+import autoscaler.model.CreateServiceInstanceBindingRequest;
+import autoscaler.model.CreateServiceInstanceBindingResponse;
 import autoscaler.model.CreateServiceInstanceRequest;
+import autoscaler.model.CreateServiceInstanceResponse;
 import autoscaler.model.ServiceDefinition;
 import autoscaler.service.CatalogService;
+import autoscaler.service.ServiceInstanceBindingService;
 import autoscaler.service.ServiceInstanceService;
 
 @RestController
 public class ServiceBrokerController {
 	private Logger log = LogManager.getLogger(ServiceBrokerController.class);
 	private ServiceInstanceService service;
+	private ServiceInstanceBindingService bindingService;
 	private CatalogService catalogService;
 
 	@Autowired
-	public ServiceBrokerController(CatalogService catalogService, ServiceInstanceService service) {
+	public ServiceBrokerController(CatalogService catalogService, ServiceInstanceService service, ServiceInstanceBindingService bindingService) {
 		this.catalogService = catalogService;
 		this.service = service;
+		this.bindingService = bindingService;
 	}
 
 	@RequestMapping(path = "/v2/catalog", method = RequestMethod.GET)
@@ -55,6 +61,27 @@ public class ServiceBrokerController {
 		return new ResponseEntity<>(response, getCreateResponseCode(response));
 	}
 
+	@RequestMapping(method = RequestMethod.PUT)
+	public ResponseEntity<?> createServiceInstanceBinding(@PathVariable("instanceId") String serviceInstanceId,
+														  @PathVariable("bindingId") String bindingId,
+														  @Valid @RequestBody CreateServiceInstanceBindingRequest request) {
+		log.debug("Creating a service instance binding: "
+				+ "serviceInstanceId=" + serviceInstanceId
+				+ ", bindingId=" + bindingId);
+
+		request.withServiceInstanceId(serviceInstanceId)
+				.withBindingId(bindingId)
+				.withServiceDefinition(getServiceDefinition(request.getServiceDefinitionId()));
+
+		CreateServiceInstanceBindingResponse response = bindingService.createServiceInstanceBinding(request);
+
+		log.debug("Creating a service instance binding succeeded: "
+				+ "serviceInstanceId=" + serviceInstanceId
+				+ "bindingId=" + bindingId);
+
+		return new ResponseEntity<>(response, response.isBindingExisted() ? HttpStatus.OK : HttpStatus.CREATED);
+	}
+	
 	private HttpStatus getCreateResponseCode(CreateServiceInstanceResponse response) {
 		if (response.isInstanceExisted()) {
 			return HttpStatus.OK;

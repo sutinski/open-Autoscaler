@@ -1,23 +1,15 @@
 package autoscaler.service;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import autoscaler.controller.CreateServiceInstanceResponse;
 import autoscaler.model.CreateServiceInstanceRequest;
+import autoscaler.model.CreateServiceInstanceResponse;
 
 public class BeanServiceInstanceService implements ServiceInstanceService {
 
-	private JdbcTemplate jdbcTemplate;
-
 	@Autowired
-	public BeanServiceInstanceService(DataSource ds) {
-		JdbcTemplate jdbc = new JdbcTemplate();
-		jdbc.setDataSource(ds);
-		this.jdbcTemplate = jdbc;
-	}
+	private JdbcTemplate jdbcTemplate;
 
 	@Override
 	public CreateServiceInstanceResponse createServiceInstance(CreateServiceInstanceRequest request) {

@@ -1,5 +1,7 @@
 package autoscaler.service;
 
+import java.util.UUID;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,8 +14,8 @@ import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import autoscaler.controller.CreateServiceInstanceResponse;
 import autoscaler.model.CreateServiceInstanceRequest;
+import autoscaler.model.CreateServiceInstanceResponse;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration({ autoscaler.Application.class })
@@ -21,10 +23,11 @@ import autoscaler.model.CreateServiceInstanceRequest;
 @SqlGroup({
     @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, 
     		config=@SqlConfig(dataSource="datasource"),
-            scripts = "file:sql/create_servicebroker.sql") ,
-    @Sql(executionPhase = ExecutionPhase.AFTER_TEST_METHOD, 
-    		config=@SqlConfig(dataSource="datasource"),
-    		scripts = "file:sql/drop_servicebroker.sql") 
+            scripts = "file:sql/create_servicebroker.sql") 
+//    ,
+//    @Sql(executionPhase = ExecutionPhase.AFTER_TEST_METHOD, 
+//    		config=@SqlConfig(dataSource="datasource"),
+//    		scripts = "file:sql/drop_servicebroker.sql") 
     })
 public class BeanServiceInstanceServiceTest {
 	
@@ -34,7 +37,7 @@ public class BeanServiceInstanceServiceTest {
 	
 	@Test
 	public void itCreatesAServiceInstance() {
-		CreateServiceInstanceRequest req = new CreateServiceInstanceRequest("service-definition-id", "plan-id", "org-id", "space-id", "service-instance-id");
+		CreateServiceInstanceRequest req = new CreateServiceInstanceRequest("service-definition-id", "plan-id", "org-id", "space-id").withServiceInstanceId(UUID.randomUUID().toString());
 		CreateServiceInstanceResponse rsp = service.createServiceInstance(req);
 		Assert.assertTrue(rsp.isInstanceExisted());
 	}

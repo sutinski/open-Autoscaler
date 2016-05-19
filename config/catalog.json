@@ -1,7 +1,7 @@
 {
 	"services": [{
-		"name": "${serviceName}",
-		"id": "${serviceName}-id",
+		"name": "cf-autoscaler",
+		"id": "cf-autoscaler-id",
 		"version": "1.0",
 		"bindable": true,
 		"description": "Automatically increase or decrease the number of application instances based on a policy you define.",
