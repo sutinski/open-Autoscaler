@@ -49,7 +49,7 @@ public class ServiceInstanceBinding implements Serializable {
 	@JsonProperty("app_id")
 	private String appId;
 
-	@Column
+	@Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",insertable=false,updatable=false)
 	@JsonSerialize
 	@JsonProperty("timestamp")
 	private long timestamp;
