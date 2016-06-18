@@ -9,5 +9,3 @@ server:
   port: 8080
 logging:
   level: "debug"
-  file: "logs/mc.log"
-  log_to_stdout: true
