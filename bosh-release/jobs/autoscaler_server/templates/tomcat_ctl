@@ -21,7 +21,7 @@ case $1 in
 
     #config autoscaler server
     host="<%= p("autoscaler.couchdb.host") %>";
-    sed -i "s/couchdbHost=.*/couchdbHost=${host}/g" /var/vcap/packages/${BASE_NAME}/server/WEB-INF/classes/config.properties
+    sed -i "s@couchdbHost=.*@couchdbHost=${host}@" /var/vcap/packages/${BASE_NAME}/server/WEB-INF/classes/config.properties
     cp -r /var/vcap/packages/${BASE_NAME}/server /var/vcap/packages/tomcat/webapps
 
     #config server.xml

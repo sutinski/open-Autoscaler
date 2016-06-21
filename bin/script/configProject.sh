@@ -84,7 +84,7 @@ function configure_deployment_info {
         [2]* )  deploymode="bosh"
  				load_bosh_deployment_info
  				break;;
- 		[3]* )  deploymode="localenv"
+ 	[3]* )  deploymode="localenv"
  				load_local_deployment_info 
  				load_couchdb_info
  				break;;		
@@ -94,7 +94,7 @@ function configure_deployment_info {
 
 }
 
-function load_bosh_deployment_info() {
+function bosh_obsolete_load_bosh_deployment_info() {
 
 	bosh_stub_file=${basedir}/../bosh-release/stubs/boshlite-stub.yml
 	bosh_director_uuid=`bosh status --uuid`;
@@ -116,6 +116,19 @@ function load_bosh_deployment_info() {
  	apiServerURI="http:\/\/"${bosh_subnet}".3\/api"; 
 	serverURIList="http:\/\/"${bosh_subnet}".4\/server";
  	couchdbHost=${bosh_subnet}".5"
+	couchdbPort=5984
+	couchdbUsername=
+	couchdbPassword=
+
+}
+
+function load_bosh_deployment_info() {
+
+	role_manifest_file=${basedir}/../../../../container-host-files/etc/hcf/config/role-manifest.yml
+	brokerURI="http://autoscaler-servicebroker:28863/servicebroker"
+ 	apiServerURI="http://autoscaler-api:28861/api"
+	serverURIList="http://autoscaler-server:28862/server"
+ 	couchdbHost=couchdb
 	couchdbPort=5984
 	couchdbUsername=
 	couchdbPassword=

@@ -66,7 +66,7 @@ function promptInput () {
 }
 
 function getConfigurationEntry() {
-	local key=$1
+	local key='^\s*'$1
 	local filename=$2
 	local value;
 	if [ -z $filename ]; then

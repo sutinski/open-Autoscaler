@@ -9,7 +9,7 @@ packages:
   - tomcat
   - autoscaler_servicebroker
 properties:
-  tomcat.http.port:
+  tomcat.http.autoscaler_servicebroker.port:
     description: the http port for tomocat server
     default: 80
   autoscaler.autoscaler_servicebroker.host:
