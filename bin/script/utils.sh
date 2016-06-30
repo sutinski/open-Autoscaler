@@ -66,7 +66,7 @@ function promptInput () {
 }
 
 function getConfigurationEntry() {
-	local key='^\s*'$1
+	local key=$1
 	local filename=$2
 	local value;
 	if [ -z $filename ]; then
@@ -76,9 +76,9 @@ function getConfigurationEntry() {
 					$AutoScalingAPIProfileDIR/$profile.properties \
 					$AutoScalingBrokerProfileDIR/$profile.properties \
 					${basedir}/default.properties \
-					| grep "$key"  | head -n 1 `
+					| grep "^\s*$key"  | head -n 1 `
 	else
-		value=`cat $filename | grep "$key"  | head -n 1 `
+		value=`cat $filename | grep "^\s*$key"  | head -n 1 `
 	fi
 
 	echo $value
