@@ -19,9 +19,6 @@ case $1 in
     mkdir -p $RUN_DIR
     mkdir -p $LOG_DIR
 
-    #config autoscaler server
-    host="<%= p("autoscaler.couchdb.host") %>";
-    sed -i "s@couchdbHost=.*@couchdbHost=${host}@" /var/vcap/packages/${BASE_NAME}/server/WEB-INF/classes/config.properties
     cp -r /var/vcap/packages/${BASE_NAME}/server /var/vcap/packages/tomcat/webapps
 
     #config server.xml
