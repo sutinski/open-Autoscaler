@@ -48,7 +48,7 @@ if [ ! -f $python_artifact ]; then
 fi
 
 if [ ! -f $icu_artifact ]; then
-	curl -OL http://download.sourceforge.net/project/icu/ICU4C/52.1/$icu_artifact
+	curl -OL http://pkgs.fedoraproject.org/repo/pkgs/icu/icu4c-52_1-src.tgz/9e96ed4c1d99c0d14ac03c140f9f346c/$icu_artifact
 fi
 
 if [ ! -f $couchdb_artifact ]; then
