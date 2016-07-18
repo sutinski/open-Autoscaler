@@ -23,7 +23,7 @@ case $1 in
 
     #config server.xml
     cp /var/vcap/jobs/${BASE_NAME}/conf/server.xml /var/vcap/packages/tomcat/conf/server.xml
-    exec /var/vcap/packages/tomcat/bin/catalina.sh start  > $LOG_DIR/tomcat.stdout.log 2> $LOG_DIR/$tomcat.stderr.log 
+    exec /var/vcap/packages/tomcat/bin/catalina.sh start  > $LOG_DIR/tomcat.stdout.log 2> $LOG_DIR/tomcat.stderr.log 
     ;;
 
   stop)
