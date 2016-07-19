@@ -11,6 +11,7 @@ source /var/vcap/packages/pid_utils/pid_utils.sh
 
 export JAVA_HOME=/var/vcap/packages/java/jdk
 export CATALINA_PID=$PIDFILE
+export CATALINA_OUT=${LOG_DIR}/catalina.out
 
 case $1 in
 
@@ -23,6 +24,9 @@ case $1 in
 
     #config server.xml
     cp /var/vcap/jobs/${BASE_NAME}/conf/server.xml /var/vcap/packages/tomcat/conf/server.xml
+    
+    #configure logging
+    cp /var/vcap/jobs/${BASE_NAME}/conf/logging.properties /var/vcap/packages/tomcat/conf/logging.properties
 
     exec /var/vcap/packages/tomcat/bin/catalina.sh start  > $LOG_DIR/tomcat.stdout.log 2> $LOG_DIR/tomcat.stderr.log 
     ;;

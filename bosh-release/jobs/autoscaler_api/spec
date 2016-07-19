@@ -3,6 +3,7 @@ name: autoscaler_api
 templates:
   tomcat_ctl: bin/tomcat_ctl
   server.xml: conf/server.xml
+  logging.properties: conf/logging.properties
 packages:
   - pid_utils
   - java
