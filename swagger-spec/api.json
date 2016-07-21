@@ -5,7 +5,6 @@
 		"description": "Sclae policy management",
 		"version": "1.0.0"
 	},
-	"basePath": "/v1/autoscaler",
 
 	"securityDefinitions": {
 		"Authorization": {
@@ -25,7 +24,7 @@
 		"application/json"
 	],
 	"paths": {
-		"/apps/{app_id}/policy": {
+		"/v1/autoscaler/apps/{app_id}/policy": {
 			"put": {
 				"summary": "Create or update application scaling policy.",
 				"description": "Create a new Auto-scaling policy or update the existing policy for your application. In this API, you need to supply a policy in JSON format.\n",
@@ -51,13 +50,13 @@
 					"200": {
 						"description": "Updated policy",
 						"schema": {
-							"type": "string"
+							"$ref": "#/definitions/SuccessfulResponse"
 						}
 					},
 					"201": {
 						"description": "Created policy",
 						"schema": {
-							"type": "string"
+							"$ref": "#/definitions/SuccessfulResponse"
 						}
 					},
 					"400": {
@@ -149,7 +148,7 @@
 				}
 			}
 		},
-		"/apps/{app_id}/policy/status": {
+		"/v1/autoscaler/apps/{app_id}/policy/status": {
 			"put": {
 				"summary": "Set policy status",
 				"description": "Enable the suspended policy or disable the policy temporarily",
@@ -159,13 +158,24 @@
 					"description": "Application id",
 					"required": true,
 					"type": "string"
+				}, {
+					"name": "policyInformation",
+					"in": "body",
+					"description": "Policy details",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/StateRequest"
+					}
 				}],
 				"tags": [
 					"Status"
 				],
 				"responses": {
 					"200": {
-						"description": "Success"
+						"description": "Success",
+						"schema": {
+							"$ref": "#/definitions/StatusResponse"
+						}
 					},
 					"400": {
 						"description": "Bad request"
@@ -222,7 +232,7 @@
 				}
 			}
 		},
-		"/apps/{app_id}/scalinghistory": {
+		"/v1/autoscaler/apps/{app_id}/scalinghistory": {
 			"get": {
 				"summary": "Get policy status",
 				"description": "Get the policy status of your application",
@@ -275,7 +285,7 @@
 				}
 			}
 		},
-		"/apps/{app_id}/metrics": {
+		"/v1/autoscaler/apps/{app_id}/metrics": {
 			"get": {
 				"summary": "Get scaling metrics",
 				"description": "Get scaling metric data",
@@ -331,6 +341,14 @@
 
 	},
 	"definitions": {
+		"SuccessfulResponse": {
+			"type": "object",
+			"properties": {
+				"policyId": {
+					"type": "string"
+				}
+			}
+		},
 		"Policy": {
 			"type": "object",
 			"properties": {
@@ -457,10 +475,7 @@
 					"type": "string"
 				},
 				"repeatOn": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					}
+					"type": "string"
 				},
 				"minInstCount": {
 					"type": "number"
@@ -493,6 +508,14 @@
 				}
 			}
 		},
+		"StateRequest": {
+			"type": "object",
+			"properties": {
+				"enable": {
+					"type": "boolean"
+				}
+			}
+		},
 		"StatusResponse": {
 			"type": "object",
 			"properties": {
@@ -511,7 +534,7 @@
 					}
 				},
 				"timestamp": {
-					"type": "string"
+					"type": "number"
 				}
 			}
 		},
@@ -531,10 +554,10 @@
 					"type": "number"
 				},
 				"startTime": {
-					"type": "string"
+					"type": "number"
 				},
 				"endTime": {
-					"type": "string"
+					"type": "number"
 				},
 				"trigger": {
 					"type": "object",
@@ -572,7 +595,7 @@
 					}
 				},
 				"timestamp": {
-					"type": "string"
+					"type": "number"
 				}
 			}
 		},
@@ -589,7 +612,7 @@
 					"type": "string"
 				},
 				"timestamp": {
-					"type": "string"
+					"type": "number"
 				},
 				"instanceMetrics": {
 					"type": "array",
@@ -606,7 +629,7 @@
 					"type": "number"
 				},
 				"timestamp": {
-					"type": "string"
+					"type": "number"
 				},
 				"instanceID": {
 					"type": "string"
@@ -635,7 +658,7 @@
 					"type": "string"
 				},
 				"timestamp": {
-					"type": "string"
+					"type": "number"
 				},
 				"unit": {
 					"type": "string"
