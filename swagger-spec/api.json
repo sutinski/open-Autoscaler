@@ -1,0 +1,649 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"title": "open-Autoscaler API",
+		"description": "Sclae policy management",
+		"version": "1.0.0"
+	},
+	"basePath": "/v1/autoscaler",
+
+	"securityDefinitions": {
+		"Authorization": {
+			"type": "apiKey",
+			"in": "header",
+			"name": "Authorization",
+			"description": "Token"
+		}
+	},
+	"security": [{
+		"Authorization": []
+	}],
+	"consumes": [
+		"application/json"
+	],
+	"produces": [
+		"application/json"
+	],
+	"paths": {
+		"/apps/{app_id}/policy": {
+			"put": {
+				"summary": "Create or update application scaling policy.",
+				"description": "Create a new Auto-scaling policy or update the existing policy for your application. In this API, you need to supply a policy in JSON format.\n",
+				"parameters": [{
+					"name": "app_id",
+					"in": "path",
+					"description": "Application id",
+					"required": true,
+					"type": "string"
+				}, {
+					"name": "policyInformation",
+					"in": "body",
+					"description": "Policy details",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/Policy"
+					}
+				}],
+				"tags": [
+					"Policies"
+				],
+				"responses": {
+					"200": {
+						"description": "Updated policy",
+						"schema": {
+							"type": "string"
+						}
+					},
+					"201": {
+						"description": "Created policy",
+						"schema": {
+							"type": "string"
+						}
+					},
+					"400": {
+						"description": "Bad request"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"404": {
+						"description": "Not found"
+					},
+					"default": {
+						"description": "Unexpected error",
+						"schema": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"delete": {
+				"summary": "Delete application scaling policy.",
+				"description": "Delete an Auto-scaling policy for your application.",
+				"parameters": [{
+					"name": "app_id",
+					"in": "path",
+					"description": "Application id",
+					"required": true,
+					"type": "string"
+				}],
+				"tags": [
+					"Policies"
+				],
+				"responses": {
+					"200": {
+						"description": "Success"
+					},
+					"400": {
+						"description": "Bad request"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"404": {
+						"description": "Not found"
+					},
+					"default": {
+						"description": "Unexpected error",
+						"schema": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"get": {
+				"summary": "Get application scaling policy.",
+				"description": "View application policy",
+				"parameters": [{
+					"name": "app_id",
+					"in": "path",
+					"description": "Application id",
+					"required": true,
+					"type": "string"
+				}],
+				"tags": [
+					"Policies"
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"schema": {
+							"$ref": "#/definitions/PolicyResponse"
+						}
+					},
+					"400": {
+						"description": "Bad request"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"404": {
+						"description": "Not found"
+					},
+					"default": {
+						"description": "Unexpected error",
+						"schema": {
+							"type": "string"
+						}
+					}
+				}
+			}
+		},
+		"/apps/{app_id}/policy/status": {
+			"put": {
+				"summary": "Set policy status",
+				"description": "Enable the suspended policy or disable the policy temporarily",
+				"parameters": [{
+					"name": "app_id",
+					"in": "path",
+					"description": "Application id",
+					"required": true,
+					"type": "string"
+				}],
+				"tags": [
+					"Status"
+				],
+				"responses": {
+					"200": {
+						"description": "Success"
+					},
+					"400": {
+						"description": "Bad request"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"404": {
+						"description": "Not found"
+					},
+					"default": {
+						"description": "Unexpected error",
+						"schema": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"get": {
+				"summary": "Get policy status",
+				"description": "Get the policy status of your application",
+				"parameters": [{
+					"name": "app_id",
+					"in": "path",
+					"description": "Application id",
+					"required": true,
+					"type": "string"
+				}],
+				"tags": [
+					"Status"
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"schema": {
+							"$ref": "#/definitions/StatusResponse"
+						}
+					},
+					"400": {
+						"description": "Bad request"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"404": {
+						"description": "Not found"
+					},
+					"default": {
+						"description": "Unexpected error",
+						"schema": {
+							"type": "string"
+						}
+					}
+				}
+			}
+		},
+		"/apps/{app_id}/scalinghistory": {
+			"get": {
+				"summary": "Get policy status",
+				"description": "Get the policy status of your application",
+				"parameters": [{
+						"name": "app_id",
+						"in": "path",
+						"description": "Application id",
+						"required": true,
+						"type": "string"
+					}, {
+						"name": "startTime",
+						"in": "query",
+						"description": "start time",
+						"required": true,
+						"type": "string"
+					}, {
+						"name": "endTime",
+						"in": "query",
+						"description": "end time",
+						"required": true,
+						"type": "string"
+					}
+
+				],
+				"tags": [
+					"History"
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"schema": {
+							"$ref": "#/definitions/ScalingHistoryResponse"
+						}
+					},
+					"400": {
+						"description": "Bad request"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"404": {
+						"description": "Not found"
+					},
+					"default": {
+						"description": "Unexpected error",
+						"schema": {
+							"type": "string"
+						}
+					}
+				}
+			}
+		},
+		"/apps/{app_id}/metrics": {
+			"get": {
+				"summary": "Get scaling metrics",
+				"description": "Get scaling metric data",
+				"parameters": [{
+						"name": "app_id",
+						"in": "path",
+						"description": "Application id",
+						"required": true,
+						"type": "string"
+					}, {
+						"name": "startTime",
+						"in": "query",
+						"description": "start time",
+						"required": true,
+						"type": "string"
+					}, {
+						"name": "endTime",
+						"in": "query",
+						"description": "end time",
+						"required": true,
+						"type": "string"
+					}
+
+				],
+				"tags": [
+					"Metrics"
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"schema": {
+							"$ref": "#/definitions/ScalingMetricsResponse"
+						}
+					},
+					"400": {
+						"description": "Bad request"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"404": {
+						"description": "Not found"
+					},
+					"default": {
+						"description": "Unexpected error",
+						"schema": {
+							"type": "string"
+						}
+					}
+				}
+			}
+		}
+
+	},
+	"definitions": {
+		"Policy": {
+			"type": "object",
+			"properties": {
+				"instanceMinCount": {
+					"type": "number",
+					"description": "Minimum number of instances"
+				},
+				"instanceMaxCount": {
+					"type": "number",
+					"description": "Maximum number of instances"
+				},
+				"policyTriggers": {
+					"type": "array",
+					"description": "Triggers.",
+					"items": {
+						"$ref": "#/definitions/Trigger"
+					}
+				},
+				"schedules": {
+					"type": "object",
+					"description": "Schedules",
+					"properties": {
+						"timezone": {
+							"type": "string"
+						},
+						"recurringSchedule": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/RecurringScheduleItem"
+							}
+						},
+						"specificDate": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/SpecificDateItem"
+							}
+						}
+					}
+				}
+			}
+		},
+		"PolicyResponse": {
+			"type": "object",
+			"properties": {
+				"policyState": {
+					"type": "string",
+					"description": "Policy state information"
+				},
+				"instanceMinCount": {
+					"type": "number",
+					"description": "Minimum number of instances"
+				},
+				"instanceMaxCount": {
+					"type": "number",
+					"description": "Maximum number of instances"
+				},
+				"policyTriggers": {
+					"type": "array",
+					"description": "Triggers.",
+					"items": {
+						"$ref": "#/definitions/Trigger"
+					}
+				},
+				"schedules": {
+					"type": "object",
+					"description": "Schedules",
+					"properties": {
+						"timezone": {
+							"type": "string"
+						},
+						"recurringSchedule": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/RecurringScheduleItem"
+							}
+						},
+						"specificDate": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/SpecificDateItem"
+							}
+						}
+					}
+				}
+			}
+		},
+		"Trigger": {
+			"type": "object",
+			"properties": {
+				"metricType": {
+					"type": "string",
+					"description": "Trigger metric"
+				},
+				"statWindow": {
+					"type": "number"
+				},
+				"lowerThreshold": {
+					"type": "number"
+				},
+				"upperThreshold": {
+					"type": "number"
+				},
+				"instanceStepCountDown": {
+					"type": "number"
+				},
+				"instanceStepCountUp": {
+					"type": "number"
+				},
+				"stepDownCoolDownSecs": {
+					"type": "number"
+				},
+				"stepUpCoolDownSecs": {
+					"type": "number"
+				}
+			}
+		},
+		"RecurringScheduleItem": {
+			"type": "object",
+			"properties": {
+				"startTime": {
+					"type": "string"
+				},
+				"endTime": {
+					"type": "string"
+				},
+				"repeatOn": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"minInstCount": {
+					"type": "number"
+				},
+				"maxInstCount": {
+					"type": "number"
+				}
+			}
+		},
+		"SpecificDateItem": {
+			"type": "object",
+			"properties": {
+				"startDate": {
+					"type": "string"
+				},
+				"startTime": {
+					"type": "string"
+				},
+				"endDate": {
+					"type": "string"
+				},
+				"endTime": {
+					"type": "string"
+				},
+				"minInstCount": {
+					"type": "number"
+				},
+				"maxInstCount": {
+					"type": "number"
+				}
+			}
+		},
+		"StatusResponse": {
+			"type": "object",
+			"properties": {
+				"status": {
+					"type": "string"
+				}
+			}
+		},
+		"ScalingHistoryResponse": {
+			"type": "object",
+			"properties": {
+				"data": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ScalingHistoryItem"
+					}
+				},
+				"timestamp": {
+					"type": "string"
+				}
+			}
+		},
+		"ScalingHistoryItem": {
+			"type": "object",
+			"properties": {
+				"appId": {
+					"type": "string"
+				},
+				"status": {
+					"type": "string"
+				},
+				"instancesBefore": {
+					"type": "number"
+				},
+				"instancesAfter": {
+					"type": "number"
+				},
+				"startTime": {
+					"type": "string"
+				},
+				"endTime": {
+					"type": "string"
+				},
+				"trigger": {
+					"type": "object",
+					"properties": {
+						"metrics": {
+							"type": "string"
+						},
+						"threshold": {
+							"type": "number"
+						},
+						"thresholdType": {
+							"type": "string"
+						},
+						"breachDuration": {
+							"type": "number"
+						},
+						"triggerType": {
+							"type": "string"
+						}
+					}
+				},
+				"errorCode": {
+					"type": "string"
+				}
+
+			}
+		},
+		"ScalingMetricsResponse": {
+			"type": "object",
+			"properties": {
+				"data": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ScalingMetricsItem"
+					}
+				},
+				"timestamp": {
+					"type": "string"
+				}
+			}
+		},
+		"ScalingMetricsItem": {
+			"type": "object",
+			"properties": {
+				"appId": {
+					"type": "string"
+				},
+				"appName": {
+					"type": "string"
+				},
+				"appType": {
+					"type": "string"
+				},
+				"timestamp": {
+					"type": "string"
+				},
+				"instanceMetrics": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/InstanceMetricsItem"
+					}
+				}
+			}
+		},
+		"InstanceMetricsItem": {
+			"type": "object",
+			"properties": {
+				"instanceIndex": {
+					"type": "number"
+				},
+				"timestamp": {
+					"type": "string"
+				},
+				"instanceID": {
+					"type": "string"
+				},
+				"metrics": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Metric"
+					}
+				}
+			}
+		},
+		"Metric": {
+			"type": "object",
+			"properties": {
+				"name": {
+					"type": "string"
+				},
+				"value": {
+					"type": "string"
+				},
+				"category": {
+					"type": "string"
+				},
+				"group": {
+					"type": "string"
+				},
+				"timestamp": {
+					"type": "string"
+				},
+				"unit": {
+					"type": "string"
+				},
+				"desc": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}
