@@ -4,8 +4,10 @@ name: couchdb
 dependencies: 
 
 files:
-  - couchdb/python/Python-2.7.6.tgz
-  - couchdb/spidermonkey/js185-1.0.0.tar.gz
-  - couchdb/erlang/otp_src_R16B03-1.tar.gz
-  - couchdb/icu/icu4c-52_1-src.tgz
-  - couchdb/apache-couchdb-1.6.1.tar.gz
+  - pre_packaging_utils/*
+# Uncomment the following lines when release blobs are setup
+#  - couchdb/python/Python-2.7.6.tgz
+#  - couchdb/spidermonkey/js185-1.0.0.tar.gz
+#  - couchdb/erlang/otp_src_R16B03-1.tar.gz
+#  - couchdb/icu/icu4c-52_1-src.tgz
+#  - couchdb/apache-couchdb-1.6.1.tar.gz

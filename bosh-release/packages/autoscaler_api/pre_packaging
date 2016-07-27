@@ -1,0 +1,33 @@
+set -e -x
+
+./pre_packaging_utils/get_java.sh
+./pre_packaging_utils/extract_java.sh
+export JAVA_HOME=${BUILD_DIR}/jdk
+export PATH=$JAVA_HOME/bin:$PATH
+
+./pre_packaging_utils/get_maven.sh
+./pre_packaging_utils/extract_maven.sh
+export MAVEN_HOME=${BUILD_DIR}/maven
+export PATH=$MAVEN_HOME/bin:$PATH
+
+
+# Download Maven project dependencies
+
+pushd open-Autoscaler/api
+  rm -rf ./target/
+  # https://github.com/cloudfoundry/cf-release/blob/514a269b31c7fc5264a2baafa7a7b4033a7986f4/packages/uaa/pre_packaging
+  mvn clean
+  mvn -U -e -B package -DskipTests=true -Ddot.git.directory=${RELEASE_DIR}/../.git
+
+  mkdir -p ${BUILD_DIR}/autoscaler
+  cp ./target/api-*.war ${BUILD_DIR}/autoscaler/api.war
+
+  mvn clean
+popd
+
+cd ${BUILD_DIR}
+rm -rf open-Autoscaler
+rm -rf pre_packaging_utils
+rm -rf maven
+rm -rf jdk
+rm -rf openjdk

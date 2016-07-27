@@ -1,19 +1,10 @@
-set -e # exit immediately if a simple command exits with a non-zero status
-set -u # report the usage of uninitialized variables
+set -e -x
 
-# We grab the latest versions that are in the directory
+echo "Extracting OpenJDK 8 ..."
 
-echo "Extracting Java 8 ..."
-
-mkdir -p openjdk/openjdk-1.8.0
-tar xzvf openjdk/openjdk-1.8.0_60.tar.gz -C openjdk/openjdk-1.8.0
+mkdir -p ${BOSH_INSTALL_TARGET}/jdk
+tar xzvf openjdk/openjdk-1.8.0_91-x86_64-trusty.tar.gz -C ${BOSH_INSTALL_TARGET}/jdk
 if [[ $? != 0 ]] ; then
-  echo "Failed extracting Apache Java 8"
+  echo "Failed extracting OpenJDK 8"
   exit 1
 fi
-cd openjdk/openjdk-1.8.0
-
-# Copy Java8 package
-echo "Copying Java8..."
-mkdir -p ${BOSH_INSTALL_TARGET}/jdk
-cp -a * ${BOSH_INSTALL_TARGET}/jdk
