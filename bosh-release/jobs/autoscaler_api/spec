@@ -20,3 +20,5 @@ properties:
         description: the autoscaler-API's username
   autoscaler_api.internal_auth.password:
         description: the autoscaler-API's password
+  autoscaler_api.scaling_service.name:
+        description: the autoscaler service name

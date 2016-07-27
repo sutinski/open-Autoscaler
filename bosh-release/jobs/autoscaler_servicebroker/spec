@@ -24,8 +24,11 @@ properties:
     description: autoscaler_server password
   autoscaler_servicebroker.auth.username:
     description: autoscaler_server username
-  autoscaler.autoscaler_servicebroker.host:
+  autoscaler_servicebroker.host:
     description: the host for the autoscaler_servicebroker
+  autoscaler_servicebroker.name:
+    description: the autoscaler service name
+    default: CF-AutoScaler
   couchdb.dbname:
     description: couchdb dbname
   tomcat.http.autoscaler_api.port:
