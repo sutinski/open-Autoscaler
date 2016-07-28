@@ -93,7 +93,8 @@ public class RestUtil {
 
 						@Override
 						public boolean verify(String arg0, SSLSession arg1) {
-							return false;
+							//TODO: replace this with configuration
+							return true;
 						}
 
 					}, context));
