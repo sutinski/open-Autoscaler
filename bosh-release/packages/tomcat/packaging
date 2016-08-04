@@ -1,6 +1,4 @@
-# abort script on any command that exits with a non zero value
-set -e
-set -u # report the usage of uninitialized variables
+set -e -x 
 
 tar zxvf apache-tomcat/apache-tomcat-8.0.32.tar.gz 
 

@@ -1,0 +1,12 @@
+set -e -x
+
+tomcat_artifact_blob="apache-tomcat/apache-tomcat-8.0.32.tar.gz"
+
+echo "Download Tomcat"
+
+cd ${BUILD_DIR}
+
+if [ ! -f $tomcat_artifact_blob ]; then
+    mkdir -p `dirname $tomcat_artifact_blob`
+	curl -o $tomcat_artifact_blob -L http://archive.apache.org/dist/tomcat/tomcat-8/v8.0.32/bin/apache-tomcat-8.0.32.tar.gz
+fi

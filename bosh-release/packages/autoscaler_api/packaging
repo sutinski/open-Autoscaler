@@ -1,4 +1,4 @@
-# abort script on any command that exits with a non zero value
-set -e
+set -e -x
+ 
 unzip autoscaler/api.war -d ./api
 cp -r ./api ${BOSH_INSTALL_TARGET}

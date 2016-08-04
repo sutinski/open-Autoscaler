@@ -1,7 +1,6 @@
 ---
 name: tomcat
-
-dependencies:
-  - java
+dependencies: []
 files:
-  - apache-tomcat/apache-tomcat-8.0.32.tar.gz
+  - pre_packaging_utils/*
+#  - apache-tomcat/apache-tomcat-8.0.32.tar.gz # Uncomment this line when release blobs are setup

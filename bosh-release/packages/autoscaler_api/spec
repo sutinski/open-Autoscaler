@@ -1,9 +1,14 @@
 ---
 name: autoscaler_api
 
-dependencies:
- - java
- - tomcat
-
+dependencies: []
 files:
- - autoscaler/api.war
+ - pre_packaging_utils/*
+ - open-Autoscaler/api/**/*
+ - open-Autoscaler/bin/**/*
+ - open-Autoscaler/docs/**/*
+ - open-Autoscaler/server/**/*
+ - open-Autoscaler/servicebroker/**/*
+ - open-Autoscaler/swagger-spec/**/*
+ - open-Autoscaler/LICENSE
+ - open-Autoscaler/README.md

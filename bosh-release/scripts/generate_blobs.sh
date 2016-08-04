@@ -5,17 +5,18 @@ release_dir="$base_dir/../"
 blobs_dir="$base_dir/../blobs"
 download_dir="$base_dir/../downloads"
 
+autoscaler_api_artifacts="api.war"
+autoscaler_server_artifacts="server.war"
+autoscaler_servicebroker_artifacts="servicebroker.war"
+
 openjdk_artifact="openjdk-1.8.0_60.tar.gz"
+maven_artifact="apache-maven-3.3.9-bin.tar.gz"
 tomcat_artifact="apache-tomcat-8.0.32.tar.gz"
 erlang_artifact="otp_src_R16B03-1.tar.gz"
 spidermonkey_artifact="js185-1.0.0.tar.gz"
 python_artifact="Python-2.7.6.tgz"
 icu_artifact="icu4c-52_1-src.tgz"
 couchdb_artifact="apache-couchdb-1.6.1.tar.gz"
-
-autoscaler_api_artifacts="api.war"
-autoscaler_server_artifacts="server.war"
-autoscaler_servicebroker_artifacts="servicebroker.war"
 
 mkdir -p $download_dir
 cd $download_dir
@@ -29,6 +30,10 @@ echo "Download required depencies "
 set -x
 if [ ! -f $openjdk_artifact ]; then
 	curl -OL http://download.run.pivotal.io/openjdk/trusty/x86_64/$openjdk_artifact
+fi
+
+if [ ! -f $maven_artifact ]; then
+	curl -OL http://archive.apache.org/dist/maven/maven-3/3.3.9/binaries/$maven_artifact
 fi
 
 if [ ! -f $tomcat_artifact ]; then
@@ -56,6 +61,7 @@ if [ ! -f $couchdb_artifact ]; then
 fi
 set +x
 
+
 cd $release_dir
 rm -rf $blobs_dir/*
 
@@ -67,6 +73,7 @@ bosh add blob $download_dir/$autoscaler_servicebroker_artifacts  autoscaler
 
 echo "Add blobs for depencies "
 bosh add blob $download_dir/$openjdk_artifact  openjdk
+bosh add blob $download_dir/$maven_artifact apache-maven
 bosh add blob $download_dir/$tomcat_artifact apache-tomcat
 
 bosh add blob $download_dir/$erlang_artifact couchdb/erlang

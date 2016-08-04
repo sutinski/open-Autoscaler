@@ -1,0 +1,3 @@
+set -e -x
+
+./pre_packaging_utils/get_java.sh

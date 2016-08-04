@@ -1,5 +1,6 @@
 ---
 name: java
-dependencies:
+dependencies: []
 files:
-- openjdk/openjdk-1.8.0_60.tar.gz
+  - pre_packaging_utils/*
+#  - openjdk/openjdk-1.8.0_91-x86_64-trusty.tar.gz # Uncomment this line when release blobs are setup
