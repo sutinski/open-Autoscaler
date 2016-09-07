@@ -15,4 +15,19 @@ properties:
     default: 80
   autoscaler.couchdb.host:
     description: the network host for the couchdb server
-  
+  autoscaler_server.internal_auth.username:
+        description: the autoscaler-Server's username
+  autoscaler_server.internal_auth.password:
+        description: the autoscaler-Server's password
+  couchdb.host:
+    description: Host name of couchdb server
+  couchdb.password:
+    description: Password to connect to couchdb
+  couchdb.port:
+    description: Port of couchdb server
+  couchdb.username:
+    description: User name to connect to couchdb
+  system_domain:
+    description: The system domain
+  uaa.clients.cf-autoscaler-client.secret:
+        description: OAuth2 client secret for the autoscaler

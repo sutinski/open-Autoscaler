@@ -22,3 +22,5 @@ properties:
         description: the autoscaler-API's password
   autoscaler_api.scaling_service.name:
         description: the autoscaler service name
+  uaa.clients.cf-autoscaler-client.secret:
+        description: OAuth2 client secret for the autoscaler
