@@ -31,6 +31,14 @@ properties:
     default: CF-AutoScaler
   couchdb.dbname:
     description: couchdb dbname
+  couchdb.host:
+    description: Host name of couchdb server
+  couchdb.password:
+    description: Password to connect to couchdb
+  couchdb.port:
+    description: Port of couchdb server
+  couchdb.username:
+    description: User name to connect to couchdb
   tomcat.http.autoscaler_api.port:
     description: api port
   tomcat.http.autoscaler_api.route:
