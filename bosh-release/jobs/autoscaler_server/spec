@@ -3,7 +3,7 @@ name: autoscaler_server
 templates:
   tomcat_ctl: bin/tomcat_ctl
   server.xml: conf/server.xml
-  logging.properties: conf/logging.properties
+  logging.properties.erb: conf/logging.properties
 packages:
   - pid_utils
   - java
@@ -31,3 +31,6 @@ properties:
     description: The system domain
   uaa.clients.cf-autoscaler-client.secret:
         description: OAuth2 client secret for the autoscaler
+  autoscaler.log_level:
+    description: the autoscaler log level
+    default: INFO
