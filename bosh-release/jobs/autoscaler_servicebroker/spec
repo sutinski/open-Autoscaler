@@ -3,7 +3,7 @@ name: autoscaler_servicebroker
 templates:
   tomcat_ctl: bin/tomcat_ctl
   server.xml: conf/server.xml
-  logging.properties: conf/logging.properties
+  logging.properties.erb: conf/logging.properties
 packages:
   - pid_utils
   - java
@@ -50,3 +50,6 @@ properties:
   tomcat.http.autoscaler_servicebroker.port:
     description: the http port for tomocat server
     default: 80
+  autoscaler.log_level:
+    description: the autoscaler log level
+    default: INFO
