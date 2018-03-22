@@ -33,5 +33,5 @@ fi
 
 if [ ! -f $couchdb_artifact_blob ]; then
     mkdir -p `dirname $couchdb_artifact_blob`
-	curl -o $couchdb_artifact_blob -L https://www.apache.org/dist/couchdb/source/1.6.1/apache-couchdb-1.6.1.tar.gz
+	curl -o $couchdb_artifact_blob -L https://s3-us-west-1.amazonaws.com/clients.als.hpcloud.com/ro-artifacts/apache-couchdb-1.6.1.tar.gz
 fi
